@@ -13,9 +13,14 @@ public class client {
         */
         
         VehicleFactory factory = new VehicleFactory();
-        Vehicle car =  factory.getVehicle("car");
-        car.start();
-    
+        Vehicle vehicle =  factory.getVehicle("car");
+        vehicle.start();
+        //Down casting to acces the few methods added in car class
+        if(vehicle instanceof Car)
+            {
+                Car car = (Car) vehicle;
+                car.stop();
+            }
     
     }
 }
