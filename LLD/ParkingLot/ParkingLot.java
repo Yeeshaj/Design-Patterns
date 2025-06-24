@@ -8,7 +8,7 @@ import java.time.Duration;
 enum SpotType {
     COMPACT, LARGE, BIKE, ELECTRIC, HANDICAPPED
 }
-
+    
 enum VehicleType {
     CAR, BIKE, TRUCK, ELECTRIC_CAR
 }
