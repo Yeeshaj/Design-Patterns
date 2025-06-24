@@ -1,4 +1,4 @@
-package Creational.Factory;
+package Creational.Factory.vehicleSystem;
 
 public class VehicleFactory {
     public Vehicle getVehicle(String type)

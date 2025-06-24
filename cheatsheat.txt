@@ -1,0 +1,234 @@
+// ✅ DESIGN PATTERNS CHEAT SHEET (UML + JAVA)
+
+// ------------------------
+// 1. Singleton Pattern
+// ------------------------
+class Singleton {
+    private static Singleton instance;
+    private Singleton() {}
+    public static Singleton getInstance() {
+        if (instance == null) instance = new Singleton();
+        return instance;
+    }
+}
+
+// ------------------------
+// 2. Factory Pattern
+// ------------------------
+interface Notification {
+    void send(String message);
+}
+class EmailNotification implements Notification {
+    public void send(String msg) { System.out.println("Email: " + msg); }
+}
+class SMSNotification implements Notification {
+    public void send(String msg) { System.out.println("SMS: " + msg); }
+}
+class NotificationFactory {
+    public static Notification create(String type) {
+        return switch (type) {
+            case "EMAIL" -> new EmailNotification();
+            case "SMS" -> new SMSNotification();
+            default -> throw new IllegalArgumentException("Unknown");
+        };
+    }
+}
+
+// ------------------------
+// 3. Abstract Factory Pattern
+// ------------------------
+interface GUIFactory {
+    Button createButton();
+}
+interface Button {
+    void paint();
+}
+class WindowsButton implements Button {
+    public void paint() { System.out.println("Windows Button"); }
+}
+class MacButton implements Button {
+    public void paint() { System.out.println("Mac Button"); }
+}
+class WindowsFactory implements GUIFactory {
+    public Button createButton() { return new WindowsButton(); }
+}
+class MacFactory implements GUIFactory {
+    public Button createButton() { return new MacButton(); }
+}
+
+// ------------------------
+// 4. Builder Pattern
+// ------------------------
+class User {
+    private String name, email;
+    private User(Builder builder) {
+        this.name = builder.name;
+        this.email = builder.email;
+    }
+    static class Builder {
+        private String name, email;
+        Builder setName(String name) { this.name = name; return this; }
+        Builder setEmail(String email) { this.email = email; return this; }
+        User build() { return new User(this); }
+    }
+}
+
+// ------------------------
+// 5. Prototype Pattern
+// ------------------------
+class Document implements Cloneable {
+    String content;
+    public Document(String content) { this.content = content; }
+    public Document clone() throws CloneNotSupportedException {
+        return (Document) super.clone();
+    }
+}
+
+// ------------------------
+// 6. Strategy Pattern
+// ------------------------
+interface PaymentStrategy {
+    void pay(int amount);
+}
+class CreditCard implements PaymentStrategy {
+    public void pay(int amt) { System.out.println("Paid by Card: " + amt); }
+}
+class PayPal implements PaymentStrategy {
+    public void pay(int amt) { System.out.println("Paid by PayPal: " + amt); }
+}
+class Cart {
+    private PaymentStrategy strategy;
+    public Cart(PaymentStrategy strategy) { this.strategy = strategy; }
+    public void checkout(int amt) { strategy.pay(amt); }
+}
+
+// ------------------------
+// 7. Observer Pattern
+// ------------------------
+interface Observer {
+    void update(String msg);
+}
+class Subscriber implements Observer {
+    String name;
+    public Subscriber(String name) { this.name = name; }
+    public void update(String msg) { System.out.println(name + ": " + msg); }
+}
+class Publisher {
+    List<Observer> observers = new ArrayList<>();
+    void subscribe(Observer o) { observers.add(o); }
+    void notifyAll(String msg) {
+        for (Observer o : observers) o.update(msg);
+    }
+}
+
+// ------------------------
+// 8. Decorator Pattern
+// ------------------------
+interface Coffee {
+    String getDescription();
+    int getCost();
+}
+class BasicCoffee implements Coffee {
+    public String getDescription() { return "Plain Coffee"; }
+    public int getCost() { return 5; }
+}
+class MilkDecorator implements Coffee {
+    private Coffee base;
+    public MilkDecorator(Coffee base) { this.base = base; }
+    public String getDescription() { return base.getDescription() + ", Milk"; }
+    public int getCost() { return base.getCost() + 2; }
+}
+
+// ------------------------
+// 9. Adapter Pattern
+// ------------------------
+interface MediaPlayer {
+    void play(String filename);
+}
+class VLCPlayer {
+    void playVLC(String file) { System.out.println("Playing VLC: " + file); }
+}
+class VLCAdapter implements MediaPlayer {
+    private VLCPlayer player = new VLCPlayer();
+    public void play(String filename) { player.playVLC(filename); }
+}
+
+// ------------------------
+// 10. Command Pattern
+// ------------------------
+interface Command {
+    void execute();
+}
+class Light {
+    void on() { System.out.println("Light ON"); }
+    void off() { System.out.println("Light OFF"); }
+}
+class LightOnCommand implements Command {
+    private Light light;
+    public LightOnCommand(Light light) { this.light = light; }
+    public void execute() { light.on(); }
+}
+class RemoteControl {
+    private Command command;
+    void setCommand(Command c) { command = c; }
+    void pressButton() { command.execute(); }
+}
+
+// ------------------------
+// 11. Template Method
+// ------------------------
+abstract class Game {
+    void play() {
+        start();
+        playGame();
+        end();
+    }
+    abstract void start();
+    abstract void playGame();
+    abstract void end();
+}
+class Cricket extends Game {
+    void start() { System.out.println("Cricket Started"); }
+    void playGame() { System.out.println("Playing Cricket"); }
+    void end() { System.out.println("Cricket Ended"); }
+}
+
+// ------------------------
+// 12. State Pattern
+// ------------------------
+interface State {
+    void handle();
+}
+class OnState implements State {
+    public void handle() { System.out.println("Device is ON"); }
+}
+class OffState implements State {
+    public void handle() { System.out.println("Device is OFF"); }
+}
+class Device {
+    private State state;
+    public void setState(State state) { this.state = state; }
+    public void pressButton() { state.handle(); }
+}
+
+// ------------------------
+// 13. Proxy Pattern
+// ------------------------
+interface Image {
+    void display();
+}
+class RealImage implements Image {
+    String filename;
+    RealImage(String filename) { this.filename = filename; loadFromDisk(); }
+    void loadFromDisk() { System.out.println("Loading " + filename); }
+    public void display() { System.out.println("Displaying " + filename); }
+}
+class ProxyImage implements Image {
+    private RealImage realImage;
+    private String filename;
+    ProxyImage(String filename) { this.filename = filename; }
+    public void display() {
+        if (realImage == null) realImage = new RealImage(filename);
+        realImage.display();
+    }
+}
