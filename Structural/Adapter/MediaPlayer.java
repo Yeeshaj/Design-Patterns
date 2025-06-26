@@ -1,4 +1,4 @@
-package Structural;
+package Structural.Adapter;
 
 public class MediaPlayer {
     
